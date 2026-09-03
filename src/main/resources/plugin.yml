@@ -1,0 +1,10 @@
+name: StelarKits
+description: $description
+version: '${version}'
+
+main: dev.stelar.kits.StelarKits
+api-version: '1.21'
+load: POSTWORLD
+
+authors: [ fckalyx, Stelar ]
+website: https://stelar.club

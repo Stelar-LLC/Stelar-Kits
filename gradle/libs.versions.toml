@@ -1,0 +1,13 @@
+[versions]
+paper-api = "1.21-R0.1-SNAPSHOT"
+minecraft = "1.21"
+
+shadow = "9.6.1"
+run-task = "3.1.0"
+
+[libraries]
+paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-task" }
