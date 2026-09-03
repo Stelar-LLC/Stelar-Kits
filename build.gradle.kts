@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar.Companion.shadowJar
+
 plugins {
     id("java-library")
     alias(libs.plugins.shadow)
@@ -7,10 +9,12 @@ plugins {
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 dependencies {
     compileOnly(libs.paper.api)
+    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 }
 
 java {
@@ -20,6 +24,12 @@ java {
 tasks {
     build {
         dependsOn(shadowJar)
+    }
+
+    shadowJar {
+        archiveClassifier.set("")
+        relocate("co.aikar.commands", "dev.stelar.lib.commands")
+        relocate("co.aikar.locales", "dev.stelar.lib.commands.locales")
     }
 
     runServer {

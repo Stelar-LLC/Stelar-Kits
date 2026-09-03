@@ -1,0 +1,12 @@
+prefix: "&6&lStelar-Kits &7» &r"
+
+no-permission: "&cYou don't have permission to use this kit! Acquire it in stelar.club!"
+no-player: "&cThis player doesn't exist!"
+on-cooldown: "&cYou can use this kit again in {time}"
+no-kit: "&cThe kit {kit_name} doesn't exist!"
+kit-applied: "&aYou have applied the kit {kit_name}!"
+
+kits-menu:
+  enabled: true
+  title: "&6&lStelar Kits"
+  rows: 3
