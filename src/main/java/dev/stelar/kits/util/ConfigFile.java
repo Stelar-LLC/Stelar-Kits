@@ -32,10 +32,11 @@ public class ConfigFile {
         this.file = new File(plugin.getDataFolder(), path);
         File parent = file.getParentFile();
 
-        if(parent != null && !parent.exists()) {
-            throw new IllegalStateException("Error trying to create folder for " + path);
+        if (parent != null && !parent.exists()) {
+            if (!parent.mkdirs()) {
+                throw new IllegalStateException("Error trying to create folder for " + path);
+            }
         }
-
         if(!file.exists()) {
             try (InputStream resource = plugin.getResource(path)) {
                 if (resource != null) {

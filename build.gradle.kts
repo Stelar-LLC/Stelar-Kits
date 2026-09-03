@@ -15,6 +15,8 @@ repositories {
 dependencies {
     compileOnly(libs.paper.api)
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
 }
 
 java {
