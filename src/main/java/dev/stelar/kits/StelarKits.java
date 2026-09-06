@@ -15,10 +15,10 @@ public final class StelarKits extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-
-        configManager = new ConfigManager(this);
         new CommandManager(this);
-        new KitManager();
+
+        this.configManager = new ConfigManager(this);
+        this.kitManager = new KitManager();
     }
 
 

@@ -14,8 +14,9 @@ public class ConfigManager {
 
     public ConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        new Configuration();
         load();
+
+        new Configuration();
     }
 
     public void load() {

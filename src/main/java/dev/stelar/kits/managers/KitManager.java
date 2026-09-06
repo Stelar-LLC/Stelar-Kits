@@ -2,6 +2,7 @@ package dev.stelar.kits.managers;
 
 import dev.stelar.kits.StelarKits;
 import dev.stelar.kits.kit.Kit;
+import dev.stelar.kits.kit.model.KitDisplay;
 import dev.stelar.kits.kit.model.KitState;
 import dev.stelar.kits.util.ItemUtil;
 import dev.stelar.kits.util.TimeUtil;
@@ -62,9 +63,9 @@ public class KitManager {
             String displayName = config.getString("kits." + key + ".item.display-name");
             boolean glow = config.getBoolean("kits." + key + ".item.glow");
             int slot = config.getInt("kits." + key + ".item.slot");
-            List<String> availableLore = config.getStringList("kits." + key + ".item.available");
-            List<String> onCooldownLore = config.getStringList("kits." + key + ".item.on-cooldown");
-            List<String> noPermissionLore = config.getStringList("kits." + key + ".item.no-permission");
+            List<String> availableLore = config.getStringList("kits." + key + ".item.lore.available");
+            List<String> onCooldownLore = config.getStringList("kits." + key + ".item.lore.on-cooldown");
+            List<String> noPermissionLore = config.getStringList("kits." + key + ".item.lore.no-permission");
 
             String content = config.getString("kits." + key + ".content");
 
@@ -74,17 +75,20 @@ public class KitManager {
             kit.setPermission(permission);
             kit.setEnabled(enabled);
 
-            kit.getKitDisplay().setIcon(Material.matchMaterial(icon));
-            kit.getKitDisplay().setDisplayName(displayName);
-            kit.getKitDisplay().setGlow(glow);
-            kit.getKitDisplay().setSlot(slot);
-            kit.getKitDisplay().getLore().put(KitState.AVAILABLE, availableLore);
-            kit.getKitDisplay().getLore().put(KitState.ON_COOLDOWN, onCooldownLore);
-            kit.getKitDisplay().getLore().put(KitState.NO_PERMISSION, noPermissionLore);
+            KitDisplay display = new KitDisplay();
+
+            display.setIcon(Material.matchMaterial(icon));
+            display.setDisplayName(displayName);
+            display.setGlow(glow);
+            display.setSlot(slot);
+            display.getLore().put(KitState.AVAILABLE, availableLore);
+            display.getLore().put(KitState.ON_COOLDOWN, onCooldownLore);
+            display.getLore().put(KitState.NO_PERMISSION, noPermissionLore);
+
+            kit.setKitDisplay(display);
 
             kit.setContent(ItemUtil.deserialize(content));
 
-            saveKit(kit);
             kits.put(key, kit);
 
         }
