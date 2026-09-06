@@ -123,14 +123,18 @@ public class KitManager {
         kit.setCooldown(0);
         kit.setPermission("stelar.kit." + name);
 
-        kit.getKitDisplay().setIcon(Material.matchMaterial(Configuration.DEFAULT_KIT_ITEM));
-        kit.getKitDisplay().setDisplayName(name);
-        kit.getKitDisplay().setGlow(true);
-        kit.getKitDisplay().setSlot(getRandomSlot());
+        KitDisplay display = new KitDisplay();
 
-        kit.getKitDisplay().getLore().put(KitState.AVAILABLE, Configuration.DEFAULT_KIT_LORE_AVAILABLE);
-        kit.getKitDisplay().getLore().put(KitState.ON_COOLDOWN, Configuration.DEFAULT_KIT_LORE_ON_COOLDOWN);
-        kit.getKitDisplay().getLore().put(KitState.NO_PERMISSION, Configuration.DEFAULT_KIT_LORE_NO_PERMISSION);
+        display.setIcon(Material.matchMaterial(Configuration.DEFAULT_KIT_ITEM));
+        display.setDisplayName(name);
+        display.setGlow(true);
+        display.setSlot(getRandomSlot());
+
+        display.getLore().put(KitState.AVAILABLE, Configuration.DEFAULT_KIT_LORE_AVAILABLE);
+        display.getLore().put(KitState.ON_COOLDOWN, Configuration.DEFAULT_KIT_LORE_ON_COOLDOWN);
+        display.getLore().put(KitState.NO_PERMISSION, Configuration.DEFAULT_KIT_LORE_NO_PERMISSION);
+
+        kit.setKitDisplay(display);
 
         kit.setContent(new ItemStack[]{});
 
