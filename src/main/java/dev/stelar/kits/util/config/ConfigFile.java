@@ -1,4 +1,4 @@
-package dev.stelar.kits.util;
+package dev.stelar.kits.util.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

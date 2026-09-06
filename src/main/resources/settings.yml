@@ -2,9 +2,37 @@ prefix: "&6&lStelar-Kits &7» &r"
 
 no-permission: "&cYou don't have permission to use this kit! Acquire it in stelar.club!"
 no-player: "&cThis player doesn't exist!"
-on-cooldown: "&cYou can use this kit again in {time}"
-no-kit: "&cThe kit {kit_name} doesn't exist!"
-kit-applied: "&aYou have applied the kit {kit_name}!"
+
+kits:
+  lang:
+    on-kit-cooldown: "&cYou can use this kit again in {time}"
+    kit-not-found: "&cThe kit {kit_name} doesn't exist!"
+    on-kit-applied: "&aYou have applied the kit {kit_name}!"
+
+  clear-inventory-on-apply: false
+
+  default-kit-item: "NETHER_STAR"
+  default-kit-cooldown: "24h"
+  default-kit-descriptions:
+    available:
+      - " "
+      - "{kit_display} "
+      - " "
+      - "&eYou can use this kit!"
+      - "&7&oLeft click to use it!"
+      - "&7&oRight click to preview!"
+    on-cooldown:
+      - " "
+      - "{kit_display} "
+      - " "
+      - "&cYou can't use this kit yet!"
+      - "&cTime left: {time}"
+    no-permission:
+      - " "
+      - "{kit_display} "
+      - " "
+      - "&cYou don't have permission to use this kit!"
+      - "&7&oAcquire it in stelar.club!"
 
 kits-menu:
   enabled: true

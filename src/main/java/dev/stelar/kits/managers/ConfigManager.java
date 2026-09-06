@@ -1,6 +1,7 @@
 package dev.stelar.kits.managers;
 
-import dev.stelar.kits.util.ConfigFile;
+import dev.stelar.kits.util.config.ConfigFile;
+import dev.stelar.kits.util.config.Configuration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class ConfigManager {
 
     public ConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        new Configuration();
         load();
     }
 

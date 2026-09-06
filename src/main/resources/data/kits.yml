@@ -1,0 +1,23 @@
+"""
+kits:
+  testkit:
+    cooldown: 3600
+    permission: stelar.kit.test
+    enabled: true
+    item:
+      material: DIAMOND_SWORD
+      display-name: &a&lTest Kit
+      glow: true
+      slot: 10
+      lore:
+        available:
+          - 
+        on-cooldown:
+          - 
+        no-permission:
+          - 
+    content: ""
+"""
+
+
+kits: {}
