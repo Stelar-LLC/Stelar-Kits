@@ -11,12 +11,14 @@ public class Configuration {
     public static String DEFAULT_KIT_COOLDOWN;
 
     public static String PREFIX;
-    public static String NO_PERMISSION;
+    public static String KIT_NO_PERMISSION;
     public static String NO_PLAYER;
 
     public static String KIT_NOT_FOUND;
     public static String ON_KIT_COOLDOWN;
     public static String ON_KIT_APPLY;
+    public static String KIT_ALREADY_EXISTS;
+    public static String KIT_CREATED;
 
     public static boolean KITS_MENU_ENABLED;
     public static String KITS_MENU_TITLE;
@@ -26,7 +28,12 @@ public class Configuration {
     public static List<String> DEFAULT_KIT_LORE_ON_COOLDOWN;
     public static List<String> DEFAULT_KIT_LORE_NO_PERMISSION;
 
+    public static List<String> KIT_LIST_NO_KITS_CREATED;
+    public static String KIT_LIST_KIT_FORMAT;
+    public static List<String> KIT_LIST_HEADER;
+
     public static boolean CLEAR_INVENTORY_ON_KIT_APPLY;
+
 
     public Configuration() {
         ConfigFile config = StelarKits.getInstance().getConfigManager().getSettings();
@@ -35,7 +42,7 @@ public class Configuration {
         DEFAULT_KIT_ITEM = config.getString("kits.default-kit-item");
 
         PREFIX = config.getString("prefix");
-        NO_PERMISSION = config.getString("no-permission");
+        KIT_NO_PERMISSION = config.getString("kits.lang.kit-no-permission");
         NO_PLAYER = config.getString("no-player");
 
         KIT_NOT_FOUND = config.getString("kits.lang.kit-not-found");
@@ -51,5 +58,12 @@ public class Configuration {
         DEFAULT_KIT_LORE_NO_PERMISSION = config.getStringList("kits.default-kit-descriptions.no-permission");
 
         CLEAR_INVENTORY_ON_KIT_APPLY = config.getBoolean("kits.clear-inventory-on-apply");
+
+        KIT_ALREADY_EXISTS = config.getString("kits.lang.kit-already-exists");
+        KIT_CREATED = config.getString("kits.lang.kit-created");
+
+        KIT_LIST_NO_KITS_CREATED = config.getStringList("kits.lang.kit-list.no-kits-created");
+        KIT_LIST_KIT_FORMAT = config.getString("kits.lang.kit-list.kit-format");
+        KIT_LIST_HEADER = config.getStringList("kits.lang.kit-list.header");
     }
 }

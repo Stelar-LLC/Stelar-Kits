@@ -1,6 +1,5 @@
 prefix: "&6&lStelar-Kits &7» &r"
 
-no-permission: "&cYou don't have permission to use this kit! Acquire it in stelar.club!"
 no-player: "&cThis player doesn't exist!"
 
 kits:
@@ -8,6 +7,20 @@ kits:
     on-kit-cooldown: "&cYou can use this kit again in {time}"
     kit-not-found: "&cThe kit {kit_name} doesn't exist!"
     on-kit-applied: "&aYou have applied the kit {kit_name}!"
+    kit-already-exists: "&cThis kit already exists!"
+    kit-created: "&aKit {kit_name} created!"
+    kit-no-permission: "&cYou don't have permission to use this kit! Acquire it in stelar.club!"
+    kit-list:
+      no-kits-created:
+        - " "
+        - "&cThe server dont have any kits created!"
+        - "&cUse /kitmanager create <kit_name> to create one!"
+        - " "
+      kit-format: "&7- &e{kit_name} &7[&r{kit_display}&7]"
+      header:
+        - " "
+        - " &6&lStelar Kits "
+        - " "
 
   clear-inventory-on-apply: false
 

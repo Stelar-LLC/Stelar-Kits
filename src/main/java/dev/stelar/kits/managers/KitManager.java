@@ -98,8 +98,6 @@ public class KitManager {
     /*
     TODO
     - APLICAR COOLDOWN
-    - VERIFICAR PERMISO
-    - VERIFICAR SI EL KIT EXISTE
     - MEJORA DEL METODO EN GENERAL
 
     METODO NO TERMINADO
@@ -107,7 +105,22 @@ public class KitManager {
 
     public void giveKit(Player player, String name) {
         Inventory inventory = player.getInventory();
-        ItemStack[] stack = getKitByName(name).getContent();
+        Kit kit = getKitByName(name);
+
+        if(kit == null) {
+            player.sendMessage(Configuration.KIT_NOT_FOUND
+                    .replace("{kit_name}", name)
+            );
+            return;
+        }
+
+        if(!player.hasPermission(kit.getPermission())) {
+            player.sendMessage(Configuration.KIT_NO_PERMISSION
+                    .replace("{kit_name}", name));
+            return;
+        }
+
+        ItemStack[] stack = kit.getContent();
 
         if(Configuration.CLEAR_INVENTORY_ON_KIT_APPLY){
             inventory.clear();
@@ -164,9 +177,6 @@ public class KitManager {
         return new ArrayList<>(kits.values());
     }
 
-    public List<String> getKitNames() {
-        return new ArrayList<>(kits.keySet());
-    }
 
 
 

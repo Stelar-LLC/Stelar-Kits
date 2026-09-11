@@ -1,6 +1,7 @@
 package dev.stelar.kits.managers;
 
 import co.aikar.commands.PaperCommandManager;
+import dev.stelar.kits.command.admin.KitManagerCommand;
 import dev.stelar.kits.command.kit.KitCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,5 +17,6 @@ public class CommandManager {
     public void register() {
         PaperCommandManager commandManager = new PaperCommandManager(plugin);
         commandManager.registerCommand(new KitCommand());
+        commandManager.registerCommand(new KitManagerCommand());
     }
 }
