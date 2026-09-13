@@ -9,6 +9,7 @@ kits:
     on-kit-applied: "&aYou have applied the kit {kit_name}!"
     kit-already-exists: "&cThis kit already exists!"
     kit-created: "&aKit {kit_name} created!"
+    kit-deleted: "&aKit {kit_name} deleted!"
     kit-no-permission: "&cYou don't have permission to use this kit! Acquire it in stelar.club!"
     kit-list:
       no-kits-created:

@@ -19,6 +19,7 @@ public class Configuration {
     public static String ON_KIT_APPLY;
     public static String KIT_ALREADY_EXISTS;
     public static String KIT_CREATED;
+    public static String KIT_DELETED;
 
     public static boolean KITS_MENU_ENABLED;
     public static String KITS_MENU_TITLE;
@@ -36,7 +37,15 @@ public class Configuration {
 
 
     public Configuration() {
-        ConfigFile config = StelarKits.getInstance().getConfigManager().getSettings();
+        this(StelarKits.getInstance() != null && StelarKits.getInstance().getConfigManager() != null
+                ? StelarKits.getInstance().getConfigManager().getSettings()
+                : null);
+    }
+
+    public Configuration(ConfigFile config) {
+        if (config == null) {
+            return;
+        }
 
         DEFAULT_KIT_COOLDOWN = config.getString("kits.default-kit-cooldown");
         DEFAULT_KIT_ITEM = config.getString("kits.default-kit-item");
@@ -47,7 +56,7 @@ public class Configuration {
 
         KIT_NOT_FOUND = config.getString("kits.lang.kit-not-found");
         ON_KIT_COOLDOWN = config.getString("kits.lang.on-kit-cooldown");
-        ON_KIT_APPLY = config.getString("kits.lang.on-kit-apply");
+        ON_KIT_APPLY = config.getString("kits.lang.on-kit-applied");
 
         KITS_MENU_ENABLED = config.getBoolean("kits-menu.enabled");
         KITS_MENU_TITLE = config.getString("kits-menu.title");
@@ -61,6 +70,7 @@ public class Configuration {
 
         KIT_ALREADY_EXISTS = config.getString("kits.lang.kit-already-exists");
         KIT_CREATED = config.getString("kits.lang.kit-created");
+        KIT_DELETED = config.getString("kits.lang.kit-deleted");
 
         KIT_LIST_NO_KITS_CREATED = config.getStringList("kits.lang.kit-list.no-kits-created");
         KIT_LIST_KIT_FORMAT = config.getString("kits.lang.kit-list.kit-format");

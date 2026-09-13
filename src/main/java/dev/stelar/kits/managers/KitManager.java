@@ -33,7 +33,7 @@ public class KitManager {
         data.set(path + ".permission", kit.getPermission());
         data.set(path + ".enabled", kit.isEnabled());
 
-        data.set(path + ".item.material", kit.getKitDisplay().getIcon());
+        data.set(path + ".item.material", kit.getKitDisplay().getIcon().toString());
         data.set(path + ".item.display-name", kit.getKitDisplay().getDisplayName());
         data.set(path + ".item.glow", kit.getKitDisplay().isGlow());
         data.set(path + ".item.slot", kit.getKitDisplay().getSlot());
@@ -96,11 +96,11 @@ public class KitManager {
     }
 
     /*
-    TODO
-    - APLICAR COOLDOWN
-    - MEJORA DEL METODO EN GENERAL
-
-    METODO NO TERMINADO
+    TODO:
+      - APLICAR COOLDOWN
+      - MEJORA DEL METODO EN GENERAL
+      - SI EL INVENTARIO ESTA LLENO, DROPEAR LOS ITEMS (CONFIGURABLE)
+      - APLICAR ARMADURA Y OFFHAND A SUS RESPECTIVOS SLOTS
      */
 
     public void giveKit(Player player, String name) {
@@ -126,7 +126,20 @@ public class KitManager {
             inventory.clear();
         }
 
-        inventory.addItem(stack);
+
+
+        for(ItemStack item : stack) {
+            if (item == null) {
+                continue;
+            }
+
+            inventory.addItem(item.clone());
+        }
+
+        player.updateInventory();
+        player.sendMessage(Configuration.ON_KIT_APPLY
+                .replace("{kit_name}", name));
+
     }
 
     public void createKit(String name) {
@@ -167,6 +180,16 @@ public class KitManager {
         data.reload();
 
         kits.remove(name);
+    }
+
+    public void setKitContent(String kitName, ItemStack[] content) {
+        if(content == null) {
+            content = new ItemStack[]{};
+        }
+
+        Kit kit = getKitByName(kitName);
+        kit.setContent(content);
+        saveKit(kit);
     }
 
     public Kit getKitByName(String name) {
