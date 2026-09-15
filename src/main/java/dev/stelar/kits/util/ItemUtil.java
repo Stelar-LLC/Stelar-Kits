@@ -47,4 +47,38 @@ public class ItemUtil {
             throw new RuntimeException("Failed to deserialize ItemStack array", exception);
         }
     }
+
+    public String serialize(ItemStack item) {
+        if (item == null) {
+            return null;
+        }
+
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream();
+             BukkitObjectOutputStream data = new BukkitObjectOutputStream(output)) {
+
+            data.writeObject(item);
+
+            return Base64.getEncoder().encodeToString(output.toByteArray());
+
+        } catch (IOException exception) {
+            throw new RuntimeException("Failed to serialize ItemStack", exception);
+        }
+    }
+
+    public ItemStack deserializeItem(String data) {
+        if (data == null || data.isBlank()) {
+            return null;
+        }
+
+        try (ByteArrayInputStream input =
+                     new ByteArrayInputStream(Base64.getDecoder().decode(data));
+             BukkitObjectInputStream dataInput =
+                     new BukkitObjectInputStream(input)) {
+
+            return (ItemStack) dataInput.readObject();
+
+        } catch (IOException | ClassNotFoundException | IllegalArgumentException exception) {
+            throw new RuntimeException("Failed to deserialize ItemStack", exception);
+        }
+    }
 }

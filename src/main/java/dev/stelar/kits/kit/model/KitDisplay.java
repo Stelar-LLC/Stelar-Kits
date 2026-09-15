@@ -19,7 +19,4 @@ public class KitDisplay {
 
     private Map<KitState, List<String>> lore = new EnumMap<>(KitState.class);
 
-    public List<String> get(KitState state){
-        return lore.get(state);
-    }
 }

@@ -1,6 +1,7 @@
 package dev.stelar.kits.kit;
 
 import dev.stelar.kits.kit.model.KitDisplay;
+import dev.stelar.kits.kit.model.KitInventory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +22,10 @@ public class Kit {
     private boolean enabled;
 
     private KitDisplay kitDisplay;
-
-    private ItemStack[] content;
+    private KitInventory kitInventory;
 
     public Kit(String name) {
         this.name = name;
     }
+
 }

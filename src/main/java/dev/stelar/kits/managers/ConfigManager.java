@@ -22,6 +22,7 @@ public class ConfigManager {
         files.clear();
         register("settings", this.plugin, "settings.yml");
         register("kits", this.plugin, "data/kits.yml");
+        register("data", this.plugin, "data/player_data.yml");
     }
 
     private void register(String key, JavaPlugin plugin, String path){
@@ -35,5 +36,9 @@ public class ConfigManager {
 
     public ConfigFile getKitsData() {
         return files.get("kits");
+    }
+
+    public ConfigFile getData() {
+        return files.get("data");
     }
 }

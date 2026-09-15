@@ -34,6 +34,9 @@ public class Configuration {
     public static List<String> KIT_LIST_HEADER;
 
     public static boolean CLEAR_INVENTORY_ON_KIT_APPLY;
+    public static boolean DROP_ITEMS_ON_FULL_INVENTORY;
+
+    public static String KIT_UPDATED_CONTENT;
 
 
     public Configuration() {
@@ -67,6 +70,7 @@ public class Configuration {
         DEFAULT_KIT_LORE_NO_PERMISSION = config.getStringList("kits.default-kit-descriptions.no-permission");
 
         CLEAR_INVENTORY_ON_KIT_APPLY = config.getBoolean("kits.clear-inventory-on-apply");
+        DROP_ITEMS_ON_FULL_INVENTORY = config.getBoolean("kits.drop-items-when-inventory-full");
 
         KIT_ALREADY_EXISTS = config.getString("kits.lang.kit-already-exists");
         KIT_CREATED = config.getString("kits.lang.kit-created");
@@ -75,5 +79,7 @@ public class Configuration {
         KIT_LIST_NO_KITS_CREATED = config.getStringList("kits.lang.kit-list.no-kits-created");
         KIT_LIST_KIT_FORMAT = config.getString("kits.lang.kit-list.kit-format");
         KIT_LIST_HEADER = config.getStringList("kits.lang.kit-list.header");
+
+        KIT_UPDATED_CONTENT = config.getString("kits.lang.kit-updated-content");
     }
 }

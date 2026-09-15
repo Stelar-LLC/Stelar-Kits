@@ -11,6 +11,7 @@ kits:
     kit-created: "&aKit {kit_name} created!"
     kit-deleted: "&aKit {kit_name} deleted!"
     kit-no-permission: "&cYou don't have permission to use this kit! Acquire it in stelar.club!"
+    kit-updated-content: "&aKit {kit_name} content updated!"
     kit-list:
       no-kits-created:
         - " "
@@ -24,6 +25,7 @@ kits:
         - " "
 
   clear-inventory-on-apply: false
+  drop-items-when-inventory-full: true
 
   default-kit-item: "NETHER_STAR"
   default-kit-cooldown: "24h"

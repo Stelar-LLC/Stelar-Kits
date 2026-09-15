@@ -7,6 +7,9 @@ import dev.stelar.kits.kit.Kit;
 import dev.stelar.kits.util.config.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 @CommandAlias("kitmanager|kitm|gkitmanager|gkitm")
 public class KitManagerCommand extends BaseCommand {
@@ -15,9 +18,10 @@ public class KitManagerCommand extends BaseCommand {
     @CommandPermission("stelarkits.admin.create")
     @Description("Create a kit")
     @Syntax("<kitName>")
-    public void onKitCreate(Player player, String kitName) {
+    public void onKitCreate(Player player, @NotNull String kitName) {
+        String key = kitName.toLowerCase(Locale.ROOT);
 
-        if(StelarKits.getInstance().getKitManager().getKitByName(kitName) != null) {
+        if(StelarKits.getInstance().getKitManager().getKitByName(key) != null) {
             player.sendMessage(Configuration.KIT_ALREADY_EXISTS
                     .replace("{kit_name}", kitName)
             );
@@ -41,9 +45,10 @@ public class KitManagerCommand extends BaseCommand {
     @CommandPermission("stelarkits.admin.delete")
     @Description("Delete a kit")
     @Syntax("<kitName>")
-    public void onKitDelete(Player player, String kitName) {
+    public void onKitDelete(Player player, @NotNull String kitName) {
+        String key = kitName.toLowerCase(Locale.ROOT);
 
-        if(StelarKits.getInstance().getKitManager().getKitByName(kitName) == null) {
+        if(StelarKits.getInstance().getKitManager().getKitByName(key) == null) {
             player.sendMessage(Configuration.KIT_NOT_FOUND
                     .replace("{kit_name}", kitName)
             );
@@ -77,29 +82,34 @@ public class KitManagerCommand extends BaseCommand {
             player.sendMessage(line);
         }
 
-        for(String kit : StelarKits.getInstance().getKitManager().getKits().stream().map(kit -> kit.getName()).toList()) {
+        for(String kit : StelarKits.getInstance().getKitManager().getKits().stream().map(Kit::getName).toList()) {
+            String key = kit.toLowerCase(Locale.ROOT);
             player.sendMessage(Configuration.KIT_LIST_KIT_FORMAT
                     .replace("{kit_name}", kit)
-                    .replace("{kit_display}", StelarKits.getInstance().getKitManager().getKitByName(kit).getKitDisplay().getDisplayName())
+                    .replace("{kit_display}", StelarKits.getInstance().getKitManager().getKitByName(key).getKitDisplay().getDisplayName())
             );
         }
     }
 
     @Subcommand("setcontent")
     @CommandPermission("stelarkits.admin.setcontent")
-    @Description("Set the content of3 a kit")
+    @Description("Set the content of a kit")
     @Syntax("<kitName>")
-    public void setContentKit(Player player, String kitName) {
-        ItemStack[] content = player.getInventory().getContents();
-        Kit kit = StelarKits.getInstance().getKitManager().getKitByName(kitName);
+    public void setContentKit(Player player, @NotNull String kitName) {
+        ItemStack[] content = player.getInventory().getStorageContents();
+        ItemStack[] armor = player.getInventory().getArmorContents();
+        ItemStack offhand = player.getInventory().getItemInOffHand();
+
+        String key = kitName.toLowerCase(Locale.ROOT);
+        Kit kit = StelarKits.getInstance().getKitManager().getKitByName(key);
 
         if(kit == null) {
             player.sendMessage(Configuration.KIT_NOT_FOUND.replace("{kit_name}", kitName));
             return;
         }
 
-        StelarKits.getInstance().getKitManager().setKitContent(kitName, content);
-        player.sendMessage("Content updated!");
+        StelarKits.getInstance().getKitManager().setKitContent(kitName, armor, content, offhand);
+        player.sendMessage(Configuration.KIT_UPDATED_CONTENT);
     }
 
 }

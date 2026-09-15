@@ -2,6 +2,7 @@ package dev.stelar.kits;
 
 import dev.stelar.kits.managers.CommandManager;
 import dev.stelar.kits.managers.ConfigManager;
+import dev.stelar.kits.managers.CooldownManager;
 import dev.stelar.kits.managers.KitManager;
 import dev.stelar.kits.util.config.Configuration;
 import lombok.Getter;
@@ -12,6 +13,7 @@ public final class StelarKits extends JavaPlugin {
     @Getter private static StelarKits instance;
     @Getter private ConfigManager configManager;
     @Getter private KitManager kitManager;
+    @Getter private CooldownManager cooldownManager;
 
     @Override
     public void onEnable() {
@@ -19,6 +21,7 @@ public final class StelarKits extends JavaPlugin {
 
         this.configManager = new ConfigManager(this);
         this.kitManager = new KitManager();
+        this.cooldownManager = new CooldownManager();
         new CommandManager(this);
     }
 

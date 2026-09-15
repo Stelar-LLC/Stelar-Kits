@@ -3,6 +3,7 @@ package dev.stelar.kits.managers;
 import dev.stelar.kits.StelarKits;
 import dev.stelar.kits.kit.Kit;
 import dev.stelar.kits.kit.model.KitDisplay;
+import dev.stelar.kits.kit.model.KitInventory;
 import dev.stelar.kits.kit.model.KitState;
 import dev.stelar.kits.util.ItemUtil;
 import dev.stelar.kits.util.TimeUtil;
@@ -12,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,7 +29,7 @@ public class KitManager {
 
     public void saveKit(Kit kit) {
         ConfigFile data = StelarKits.getInstance().getConfigManager().getKitsData();
-        String path = "kits." + kit.getName();
+        String path = "kits." + kit.getName().toLowerCase(Locale.ROOT);
 
         data.set(path + ".cooldown", kit.getCooldown());
         data.set(path + ".permission", kit.getPermission());
@@ -42,7 +44,9 @@ public class KitManager {
         data.set(path + ".item.lore.on-cooldown", kit.getKitDisplay().getLore().get(KitState.ON_COOLDOWN));
         data.set(path + ".item.lore.no-permission", kit.getKitDisplay().getLore().get(KitState.NO_PERMISSION));
 
-        data.set(path + ".content", ItemUtil.serialize(kit.getContent()));
+        data.set(path + ".content.armor", ItemUtil.serialize(kit.getKitInventory().getArmor()));
+        data.set(path + ".content.inventory", ItemUtil.serialize(kit.getKitInventory().getContent()));
+        data.set(path + ".content.offhand", ItemUtil.serialize(kit.getKitInventory().getOffhand()));
 
         data.save();
         data.reload();
@@ -67,8 +71,6 @@ public class KitManager {
             List<String> onCooldownLore = config.getStringList("kits." + key + ".item.lore.on-cooldown");
             List<String> noPermissionLore = config.getStringList("kits." + key + ".item.lore.no-permission");
 
-            String content = config.getString("kits." + key + ".content");
-
             Kit kit = new Kit(key);
 
             kit.setCooldown(cooldown);
@@ -87,9 +89,15 @@ public class KitManager {
 
             kit.setKitDisplay(display);
 
-            kit.setContent(ItemUtil.deserialize(content));
+            KitInventory inventory = new KitInventory();
 
-            kits.put(key, kit);
+            inventory.setArmor(ItemUtil.deserialize(config.getString("kits." + key + ".content.armor")));
+            inventory.setContent(ItemUtil.deserialize(config.getString("kits." + key + ".content.inventory")));
+            inventory.setOffhand(ItemUtil.deserializeItem(config.getString("kits." + key + ".content.offhand")));
+
+            kit.setKitInventory(inventory);
+
+            kits.put(key.toLowerCase(Locale.ROOT), kit);
 
         }
 
@@ -98,49 +106,118 @@ public class KitManager {
     /*
     TODO:
       - APLICAR COOLDOWN
-      - MEJORA DEL METODO EN GENERAL
-      - SI EL INVENTARIO ESTA LLENO, DROPEAR LOS ITEMS (CONFIGURABLE)
-      - APLICAR ARMADURA Y OFFHAND A SUS RESPECTIVOS SLOTS
      */
 
     public void giveKit(Player player, String name) {
-        Inventory inventory = player.getInventory();
-        Kit kit = getKitByName(name);
+        PlayerInventory inventory = player.getInventory();
 
-        if(kit == null) {
+        Kit kit = getKitByName(name.toLowerCase(Locale.ROOT));
+
+        if (kit == null) {
             player.sendMessage(Configuration.KIT_NOT_FOUND
-                    .replace("{kit_name}", name)
-            );
+                    .replace("{kit_name}", name));
             return;
         }
 
-        if(!player.hasPermission(kit.getPermission())) {
+        if (!player.hasPermission(kit.getPermission())) {
             player.sendMessage(Configuration.KIT_NO_PERMISSION
                     .replace("{kit_name}", name));
             return;
         }
 
-        ItemStack[] stack = kit.getContent();
+        KitInventory kitInventory = kit.getKitInventory();
 
-        if(Configuration.CLEAR_INVENTORY_ON_KIT_APPLY){
+        ItemStack[] content = kitInventory.getContent();
+        ItemStack[] armor = kitInventory.getArmor();
+        ItemStack offHand = kitInventory.getOffhand();
+
+        if (Configuration.CLEAR_INVENTORY_ON_KIT_APPLY) {
             inventory.clear();
+            inventory.setArmorContents(new ItemStack[4]);
+            inventory.setItemInOffHand(null);
         }
 
+        if (content != null) {
+            addItems(player, content);
+        }
 
+        if (armor != null) {
+            for (int i = 0; i < armor.length && i < 4; i++) {
+                ItemStack item = armor[i];
 
-        for(ItemStack item : stack) {
-            if (item == null) {
+                if (item == null || item.getType().isAir()) {
+                    continue;
+                }
+
+                if (inventory.getArmorContents()[i] == null
+                        || inventory.getArmorContents()[i].getType().isAir()) {
+
+                    ItemStack[] currentArmor = inventory.getArmorContents();
+                    currentArmor[i] = item.clone();
+                    inventory.setArmorContents(currentArmor);
+
+                } else {
+                    addItemOrDrop(player, item);
+                }
+            }
+        }
+
+        if (offHand != null && !offHand.getType().isAir()) {
+            ItemStack currentOffHand = inventory.getItemInOffHand();
+
+            if (currentOffHand.getType().isAir()) {
+                inventory.setItemInOffHand(offHand.clone());
+            } else {
+                addItemOrDrop(player, offHand);
+            }
+        }
+
+        if(StelarKits.getInstance().getCooldownManager().isOnCooldown(player.getUniqueId(), name)) {
+            // mensaje de cooldown
+            // format
+        }
+
+        player.sendMessage(Configuration.ON_KIT_APPLY
+                .replace("{kit_name}", name));
+    }
+
+    private void addItems(Player player, ItemStack[] items) {
+        for (ItemStack item : items) {
+            if (item == null || item.getType().isAir()) {
                 continue;
             }
 
-            inventory.addItem(item.clone());
+            addItemOrDrop(player, item);
         }
-
-        player.updateInventory();
-        player.sendMessage(Configuration.ON_KIT_APPLY
-                .replace("{kit_name}", name));
-
     }
+
+    private void addItemOrDrop(Player player, ItemStack item) {
+        HashMap<Integer, ItemStack> leftovers =
+                player.getInventory().addItem(item.clone());
+
+        if (!leftovers.isEmpty()
+                && Configuration.DROP_ITEMS_ON_FULL_INVENTORY) {
+
+            dropItems(
+                    player,
+                    leftovers.values().toArray(new ItemStack[0])
+            );
+        }
+    }
+
+    private void dropItems(Player player, ItemStack[] items) {
+        for (ItemStack item : items) {
+            if (item == null || item.getType().isAir()) {
+                continue;
+            }
+
+            player.getWorld().dropItemNaturally(
+                    player.getLocation(),
+                    item.clone()
+            );
+        }
+    }
+
 
     public void createKit(String name) {
         Kit kit = new Kit(name);
@@ -150,6 +227,7 @@ public class KitManager {
         kit.setPermission("stelar.kit." + name);
 
         KitDisplay display = new KitDisplay();
+        KitInventory inventory = new KitInventory();
 
         display.setIcon(Material.matchMaterial(Configuration.DEFAULT_KIT_ITEM));
         display.setDisplayName(name);
@@ -160,12 +238,16 @@ public class KitManager {
         display.getLore().put(KitState.ON_COOLDOWN, Configuration.DEFAULT_KIT_LORE_ON_COOLDOWN);
         display.getLore().put(KitState.NO_PERMISSION, Configuration.DEFAULT_KIT_LORE_NO_PERMISSION);
 
-        kit.setKitDisplay(display);
+        inventory.setArmor(new ItemStack[]{});
+        inventory.setContent(new ItemStack[]{});
+        inventory.setOffhand(ItemStack.empty());
 
-        kit.setContent(new ItemStack[]{});
+        kit.setKitDisplay(display);
+        kit.setKitInventory(inventory);
 
         saveKit(kit);
-        kits.put(name, kit);
+        String key = name.toLowerCase();
+        kits.put(key, kit);
     }
 
     public static int getRandomSlot(){
@@ -174,21 +256,29 @@ public class KitManager {
 
     public void deleteKit(String name) {
         ConfigFile data = StelarKits.getInstance().getConfigManager().getKitsData();
+        name = name.toLowerCase(Locale.ROOT);
 
-        data.set("kits." + name, null);
+        data.set("kits." + name, null);      name = name.toLowerCase(Locale.ROOT);
         data.save();
         data.reload();
 
         kits.remove(name);
     }
 
-    public void setKitContent(String kitName, ItemStack[] content) {
+    public void setKitContent(String kitName, ItemStack[] armor, ItemStack[] content, ItemStack offhand) {
         if(content == null) {
             content = new ItemStack[]{};
         }
 
-        Kit kit = getKitByName(kitName);
-        kit.setContent(content);
+        String key = kitName.toLowerCase(Locale.ROOT);
+
+        Kit kit = getKitByName(key);
+        KitInventory inventory = kit.getKitInventory();
+        inventory.setArmor(armor);
+        inventory.setContent(content);
+        inventory.setOffhand(offhand);
+
+        kit.setKitInventory(inventory);
         saveKit(kit);
     }
 
